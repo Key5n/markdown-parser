@@ -25,7 +25,6 @@ const genStrongElement = (id: number, text: string, parent: Token): Token => {
 
 const matchWithStrongRegxp = (text: string) => {
   const result: RegExpMatchArray | null = text.match(STRONG_ELM_REGXP);
-  console.log("this is matched: ", result);
   return result;
 };
 
