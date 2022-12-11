@@ -1,4 +1,4 @@
-import { Attribute } from "./attriute";
+import { Attribute } from "./attribute";
 
 export type Token = {
   id: number;

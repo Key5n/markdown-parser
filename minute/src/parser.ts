@@ -1,5 +1,5 @@
 import { genTextElement } from "./lexer";
-import { Attribute } from "./models/attriute";
+import { Attribute } from "./models/attribute";
 import { BlockMdWithType } from "./models/block_md_with_type";
 import { Token } from "./models/token";
 

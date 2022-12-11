@@ -1,4 +1,4 @@
-import { Attribute } from "./attriute";
+import { Attribute } from "./attribute";
 import { Token } from "./token";
 
 export type MergedToken = {
