@@ -1,9 +1,4 @@
-import {
-  genStrongElement,
-  genTextElement,
-  matchWithListRegxp,
-  matchWithStrongRegxp,
-} from "./lexer";
+import { genTextElement } from "./lexer";
 import { Attribute } from "./models/attriute";
 import { BlockMdWithType } from "./models/block_md_with_type";
 import { Token } from "./models/token";

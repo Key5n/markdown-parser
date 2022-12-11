@@ -10,7 +10,3 @@ const convertToHTMLString = (markdown: string) => {
 };
 
 console.log(convertToHTMLString("normal text\n\n- **bold text**\n- list2"));
-
-// convertToHTMLString("* list1\n* list2")[0].forEach((obj) => {
-//   console.log(obj);
-// });
