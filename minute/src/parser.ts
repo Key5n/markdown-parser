@@ -1,12 +1,50 @@
 import {
   genStrongElement,
   genTextElement,
+  matchWithListRegxp,
   matchWithStrongRegxp,
 } from "./lexer";
 import { Token } from "./models/token";
 
 export const parse = (markdownRow: string) => {
+  if (matchWithListRegxp(markdownRow)) {
+    return _tokenizeList(markdownRow);
+  }
   return _tokenizeText(markdownRow);
+};
+
+export const _tokenizeList = (listString: string) => {
+  const UL = "ul";
+  const LIST = "li";
+
+  let id = 1;
+  const rootUlToken: Token = {
+    id,
+    elmType: UL,
+    content: "",
+    parent: rootToken,
+  };
+  let parent = rootUlToken;
+  let tokens: Token[] = [rootUlToken];
+  listString
+    .split(/\r\n|\r|\n/)
+    .filter(Boolean)
+    .forEach((l) => {
+      const match = matchWithListRegxp(l) as RegExpMatchArray;
+
+      id += 1;
+      const listToken: Token = {
+        id,
+        elmType: LIST,
+        content: "",
+        parent,
+      };
+      tokens.push(listToken);
+      const listText: Token[] = _tokenizeText(match[3], id, listToken);
+      id += listText.length;
+      tokens.push(...listText);
+    });
+  return tokens;
 };
 
 const _tokenizeText = (
