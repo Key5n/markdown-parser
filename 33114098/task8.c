@@ -1,47 +1,23 @@
-#include <string.h>
-#include <regex.h>
-#include <stdio.h>
+#include "include/regexp.h"
 
-int main(void)
-{
-    int i;
-    char name[] = "**bold**, **aiueo**";
-    const char pattern[] = "\\*\\*[a-z]+\\*\\*";
-    regex_t regexBuffer;
-    regmatch_t match[4];
-    int size;
-    char result[128];
+static int convertToHTMLString(char *markdown) {
+  size_t i = 0;
+  size_t size = 0;
+  char *result[100];
+  const char pattern[] = "^# (.+)";
+  char *target = markdown;
+  printf("===条件===\n");
+  printf("正規表現パターン: %s\n", pattern);
+  printf("検索対象の文字列: %s\n", target);
 
-    // 正規表現オブジェクトをコンパイル
-    if ( regcomp(&regexBuffer, pattern, REG_EXTENDED | REG_NEWLINE ) != 0 )
-    {
-        printf("regcomp failed\n");
-        return 1;
-    }
-
-    // 正規表現パターンとマッチする？
-    size = sizeof(match) / sizeof(regmatch_t); // 4
-    if ( regexec(&regexBuffer, name, size, match, 0) != 0 )
-    {
-        printf("no match\n");
-        return 1;
-    }
-
-    // パターンマッチした場合の処理
-    for ( i = 0; i < size; i++ )
-    {
-        // マッチした位置の開始・終了インデックス
-        int startIndex = match[i].rm_so;    // 開始インデックス
-        int endIndex = match[i].rm_eo;      // 終了インデックス
-        if ( startIndex == -1 || endIndex == -1 )
-        {
-            printf("exit\n");
-            continue;
-        }
-        strncpy(result, name+startIndex , endIndex - startIndex);
-        printf("%s\n",result);
-    }
-
-    regfree(&regexBuffer);
-    return 0;
+  size = regexp(pattern, target, result);
+  if (size == FAILURE) {
+    return EXIT_FAILURE;
+  }
+  printf("===結果===\n");
+  for (i = 0; i < size; i++) {
+    printf("マッチNo.%d 結果=%s\n", (int)i, result[i]);
+    free(result[i]);
+  }
 }
+int main(void) { convertToHTMLString("# aiuoe"); }

@@ -1,0 +1,1 @@
+int parse(char *markdown_row[], char *ast[]);

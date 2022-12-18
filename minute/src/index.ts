@@ -1,12 +1,10 @@
-import { generate } from "./generator";
-import { analize } from "./lexer";
-import { parse } from "./parser";
+import { parse } from './parser';
+import { generate } from './generator';
+import { analize } from './lexer';
 
-const convertToHTMLString = (markdown: string) => {
+export const convertToHTMLString = (markdown: string) => {
   const mdArray = analize(markdown);
   const asts = mdArray.map((md) => parse(md));
   const htmlString = generate(asts);
   return htmlString;
 };
-
-console.log(convertToHTMLString("normal text\n\n- **bold text**\n- list2"));
