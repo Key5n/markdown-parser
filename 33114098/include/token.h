@@ -1,11 +1,13 @@
 #ifndef TOKEN_H
 #define TOKEN_H
 
-typedef struct {
+typedef struct token Token_t;
+
+struct token {
   int id;
   Token_t *parent;
-  char *elm_type;
+  const char *elm_type;
   char *content;
-} Token_t;
+};
 
 #endif

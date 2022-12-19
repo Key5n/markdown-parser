@@ -1,16 +1,15 @@
-#include "include/regexp.h"
+#include "../include/regexp.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 static int __regcomp(regex_t *regex, const char *pattern);
-static regmatch_t *mallocMatchBuf(regex_t regex);
+static regmatch_t *malloc_match_buf(regex_t regex);
 static int __regexec(regex_t *regex, const char *target, regmatch_t *match);
 static int mallocStrArray(size_t size, int element_nr, char *result[]);
-static int extractString(const char *target, regex_t *regex, regmatch_t *match,
-                         char *result[]);
-int regexp(const char *regex_pattern, const char *target, char *result[]);
+static int extract_string(const char *target, regex_t *regex, regmatch_t *match,
+                          char *result[]);
 
 /**
  * @brief 正規表現パターンのコンパイルを行う。
@@ -35,7 +34,7 @@ static int __regcomp(regex_t *regex, const char *pattern) {
  * @return NULL以外：成功、NULL：失敗
  * @note 成功時はメモリを割り当てるため、free()によるメモリ解放が必要。
  */
-static regmatch_t *mallocMatchBuf(regex_t regex) {
+static regmatch_t *malloc_match_buf(regex_t regex) {
   regmatch_t *match = NULL;
   /*
    * re_nsubには"("と")"で囲まれたグループの数が格納されている。
@@ -78,52 +77,6 @@ static int __regexec(regex_t *regex, const char *target, regmatch_t *match) {
 }
 
 /**
- * @brief 正規表現によるパターンマッチを行い、processに応じた文字列操作を行う。
- * @param regex_pattern 正規表現パターン
- * @param target 検索対象の文字列
- * @param result
- * 文字列操作結果を格納するための二次元配列（二次元目のみ自動でメモリ確保を行う）
- * @param process 文字列操作を行う関数へのポインタ
- * @return 正の値（マッチングした文字列の数）：成功、FAILURE：失敗
- * @note
- * 正の値が返った場合は、その数の分だけresultにメモリ確保を行っているため、メモリ解放しなければいけない。
- */
-int regexp(const char *regex_pattern, const char *target, char *result[]) {
-  int err_code = SUCCESS;
-  regex_t regex;
-  regmatch_t *match = NULL;
-
-  if (regex_pattern == NULL || target == NULL || result == NULL) {
-    fprintf(stderr, "%s: Regular expression argument is null.\n", __func__);
-    return FAILURE;
-  }
-
-  memset(&regex, 0, sizeof(regex_t));
-
-  if ((err_code = __regcomp(&regex, regex_pattern))) {
-    goto all_end;
-  }
-
-  if ((match = mallocMatchBuf(regex)) == NULL) {
-    goto free_regex_obj;
-  }
-
-  if ((err_code = __regexec(&regex, target, match))) {
-    goto free_match_obj;
-  }
-
-  /* 置換やマッチング文字の抽出などを関数ポインタに応じて行う */
-  err_code = extractString((const char *)target, &regex, match, result);
-
-free_match_obj:
-  free(match);
-free_regex_obj:
-  regfree(&regex);
-all_end:
-  return err_code;
-}
-
-/**
  * @brief 複数の文字列を保持するためメモリ確保を行う（メモリ確保は二次元目のみ）
  * @param size 文字列のサイズ
  * @param element_nr 要素数
@@ -158,8 +111,8 @@ static int mallocStrArray(size_t size, int element_nr, char *result[]) {
  * @param result マッチングした文字列
  * @return SUCCESS：成功、FAILURE：失敗
  */
-static int extractString(const char *target, regex_t *regex, regmatch_t *match,
-                         char *result[]) {
+static int extract_string(const char *target, regex_t *regex, regmatch_t *match,
+                          char *result[]) {
   size_t i = 0;
   size_t extract_nr = regex->re_nsub + ALL_MATCH_STR_NR;
   size_t array_element_size =
@@ -185,4 +138,49 @@ static int extractString(const char *target, regex_t *regex, regmatch_t *match,
   }
 
   return extract_nr;
+}
+/**
+ * @brief 正規表現によるパターンマッチを行い、processに応じた文字列操作を行う。
+ * @param regex_pattern 正規表現パターン
+ * @param target 検索対象の文字列
+ * @param result
+ * 文字列操作結果を格納するための二次元配列（二次元目のみ自動でメモリ確保を行う）
+ * @param process 文字列操作を行う関数へのポインタ
+ * @return 正の値（マッチングした文字列の数）：成功、FAILURE：失敗
+ * @note
+ * 正の値が返った場合は、その数の分だけresultにメモリ確保を行っているため、メモリ解放しなければいけない。
+ */
+int regexp(const char *regex_pattern, const char *target, char *result[]) {
+  int err_code = SUCCESS;
+  regex_t regex;
+  regmatch_t *match = NULL;
+
+  if (regex_pattern == NULL || target == NULL || result == NULL) {
+    fprintf(stderr, "%s: Regular expression argument is null.\n", __func__);
+    return FAILURE;
+  }
+
+  memset(&regex, 0, sizeof(regex_t));
+
+  if ((err_code = __regcomp(&regex, regex_pattern))) {
+    goto all_end;
+  }
+
+  if ((match = malloc_match_buf(regex)) == NULL) {
+    goto free_regex_obj;
+  }
+
+  if ((err_code = __regexec(&regex, target, match))) {
+    goto free_match_obj;
+  }
+
+  /* 置換やマッチング文字の抽出などを関数ポインタに応じて行う */
+  err_code = extract_string((const char *)target, &regex, match, result);
+
+free_match_obj:
+  free(match);
+free_regex_obj:
+  regfree(&regex);
+all_end:
+  return err_code;
 }
