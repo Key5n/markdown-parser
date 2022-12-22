@@ -123,7 +123,7 @@ static int extract_string(const char *target, regex_t *regex, regmatch_t *match,
    * 抽出文字列の最大サイズは、検索対象文字列のサイズを超えないため、
    * 「抽出文字列の数 *
    * 検索対象文字列サイズ（NULL終端含む）」のメモリ確保を行う。
-   *  配列の1次元目（resulu[N][]のN分）は、メモリ確保済みと仮定する。
+   *  配列の1次元目（result[N][]のN分）は、メモリ確保済みと仮定する。
    */
   mallocStrArray(array_element_size, extract_nr, result);
 
