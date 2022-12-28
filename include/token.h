@@ -4,10 +4,8 @@
 typedef struct token Token_t;
 
 struct token {
-  int id;
-  Token_t *parent;
-  const char *elm_type;
   char *content;
+  const char *elm_type;
 };
 
 #endif

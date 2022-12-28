@@ -1,8 +1,0 @@
-{
-  "files.associations": {
-    "*.c": "c",
-    "regex.h": "c",
-    "stdio.h": "c",
-    "regexpression.h": "c"
-  }
-}
