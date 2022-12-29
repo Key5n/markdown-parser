@@ -22,14 +22,14 @@ struct text_elm_regexp {
  * @param asts ArrayList<Token_t> ここにトークン化したものをpushする
  * @return 1 成功, 0 失敗
  */
-extern List_T __parse(char *original_text, List_T list);
+extern List_T parse(char *original_text, List_T list);
 
 /**
  * @brief HTMlを出力する
  * @param list トークンが格納されているリスト
  * @return SUCCESS 成功, FAILURE 失敗
  */
-extern int __generate(List_T list, FILE *fp);
+extern int generate(List_T list, FILE *fp);
 
 // デバッグ用
 void print_list(List_T list);
