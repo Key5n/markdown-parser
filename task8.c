@@ -31,11 +31,11 @@ int main(int argc, char *argv[]) {
   while (getline(&line, &n, input) != EOF) {
     printf("line = %s\n", line);
     printf("row: %d\n", (int)lineno++);
-    asts = __parse(line, asts);
+    asts = parse(line, asts);
   }
 
   // 抽象構文木astをhtmlに変換
-  __generate(asts, output);
+  generate(asts, output);
 
   if (line) {
     free(line);
