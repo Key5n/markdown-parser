@@ -3,12 +3,14 @@
 #include "../include/token.h"
 void print_list(List_T list) { Token_t *a = (Token_t *)list->val; }
 
-int __generate(List_T list, FILE *output) {
+int generate(List_T list, FILE *output) {
   int i = 0;
   int length = List_length(list);
   // listを配列化
-  Token_t **token_array = (Token_t **)malloc(sizeof(Token_t) * length);
+
+  Token_t **token_array = malloc(sizeof(Token_t) * length);
   token_array = (Token_t **)List_toArray(list);
+
   // デバッグ用の表示
   print_list(list);
 
