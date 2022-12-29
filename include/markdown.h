@@ -9,6 +9,13 @@
 
 #define STRING_BUF 1024
 
+typedef struct text_elm_regexp text_elm_regexp_t;
+
+struct text_elm_regexp {
+  const char *elm_type;
+  const char *regexp;
+};
+
 /**
  * @brief すべての正規表現と比較してトークンを作る
  * @param original_text トークン化前の文章
@@ -23,12 +30,7 @@ extern List_T __parse(char *original_text, List_T list);
  * @return SUCCESS 成功, FAILURE 失敗
  */
 extern int __generate(List_T list, FILE *fp);
-typedef struct text_elm_regexp text_elm_regexp_t;
 
-struct text_elm_regexp {
-  const char *elm_type;
-  const char *regexp;
-};
-
+// デバッグ用
 void print_list(List_T list);
 #endif
