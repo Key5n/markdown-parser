@@ -34,6 +34,7 @@ int main(int argc, char *argv[]) {
     asts = __parse(line, asts);
   }
 
+  // 抽象構文木astをhtmlに変換
   __generate(asts, output);
 
   if (line) {
