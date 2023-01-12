@@ -10,8 +10,8 @@ task8: task8.o parser.o generator.o list.o regexp.o
 	gcc -o task8 task8.o parser.o generator.o list.o regexp.o 
 	$(MAIN) $(INPUT)
 
-task8.o: task8.c
-	gcc -c task8.c
+task8.o: task8.c lib/list.c
+	gcc -c task8.c lib/list.c
 
 parser.o: markdown/parser.c
 	gcc -c markdown/parser.c
